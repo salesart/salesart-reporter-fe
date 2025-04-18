@@ -1,0 +1,28 @@
+<mat-dialog-content>
+  <div class="dialog-header">
+    <p>{{ 'guide_title' | translate }}</p>
+    <button mat-icon-button [mat-dialog-close]="true">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <hr>
+  <div>
+    <h4>{{ 'page_number_header' | translate }}</h4>
+    {{ 'page_number_description' | translate }}
+    <br>
+    <hr style="opacity: 0.5">
+    <h4>{{ 'parameterized_table_header' | translate }}</h4>
+    {{ 'parameterized_table_description' | translate }}
+    <br>
+    <img src="assets/tableFormat.png" width="1000" alt="">
+    <hr style="opacity: 0.5">
+    <h4>{{ 'parameterized_subtotal_table_header' | translate }}</h4>
+    {{ 'parameterized_subtotal_table_description' | translate }}
+    <br><br>{{ 'subtotal_example' | translate }}
+    <br>{{ 'subtotal_placeholder' | translate }}
+    <br>
+    <img src="assets/tableSubTotalFormat.png" width="1000" alt="">
+    <br>
+    <b>{{ 'note' | translate }}</b>
+  </div>
+</mat-dialog-content>

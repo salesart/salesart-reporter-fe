@@ -1,0 +1,38 @@
+<mat-form-field class="small" style="font-size: 14px;" appearance="outline">
+  <mat-label style="font-size: 14px;">{{ 'search' | translate }}</mat-label>
+  <input matInput style="font-size: 14px;" minlength="2" (keyup)="applyFilter($event)" placeholder="Filter"
+         #input>
+</mat-form-field>
+<mat-tree [dataSource]="parameterMatFlatDataSource" [treeControl]="treeControl">
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding [matTreeNodePaddingIndent]="15">
+    <button mat-icon-button disabled class="menu-button"></button>
+    <button mat-button matTooltipPosition="right"
+            [matTooltip]="getTooltipText(node.type)"
+            (click)="onNodeClick(node)" class="wrapped-button">
+      {{ node.name }}
+      <mat-icon *ngIf="(node.type==='LIST' || node.type==='SUBLIST')" fontIcon="table_rows" class="iconPlace"
+                iconPositionEnd>
+      </mat-icon>
+      <mat-icon *ngIf="node.type === 'STRING'" fontIcon="title" class="iconPlace" iconPositionEnd>
+      </mat-icon>
+    </button>
+  </mat-tree-node>
+  <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding [matTreeNodePaddingIndent]="15">
+    <button mat-icon-button matTreeNodeToggle
+            [attr.aria-label]="'Toggle ' + node.name" class="menu-button">
+      <mat-icon class="mat-icon-rtl-mirror">
+        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+      </mat-icon>
+    </button>
+    <button mat-button matTooltipPosition="right"
+            [matTooltip]="getTooltipText(node.type)"
+            (click)="onNodeClick(node)" class="wrapped-button">
+      {{ node.name }}
+      <mat-icon *ngIf="(node.type==='LIST' || node.type==='SUBLIST')" fontIcon="table_rows" class="iconPlace"
+                iconPositionEnd>
+      </mat-icon>
+      <mat-icon *ngIf="node.type === 'STRING'" fontIcon="title" class="iconPlace" iconPositionEnd>
+      </mat-icon>
+    </button>
+  </mat-tree-node>
+</mat-tree>

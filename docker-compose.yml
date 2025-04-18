@@ -1,0 +1,8 @@
+version: '3.9'
+
+services:
+  salesart-reporter-web:
+    image: salesart-reporter-web:1.0.0
+    container_name: salesart-reporter-web
+    ports:
+      - "4200:80"

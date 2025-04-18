@@ -1,0 +1,196 @@
+<div class="wrapper">
+  <div class="sidebar">
+    <mat-accordion multi>
+      <form [formGroup]="form">
+        <mat-expansion-panel expanded>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="panel-title">{{ 'template_information' | translate }}</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <mat-form-field class="small" appearance="outline">
+            <mat-label>{{ 'doc_type' | translate }}</mat-label>
+            <mat-select formControlName="type" required>
+              <mat-option *ngFor="let document of documentTypeList" [value]="document.value">
+                {{ document.viewValue }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('type')?.hasError('required') && form.get('type')?.touched">
+              {{ 'doc_type_info' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="small" appearance="outline">
+            <mat-label>{{ 'code' | translate }}</mat-label>
+            <input matInput formControlName="code" required />
+            <mat-error *ngIf="form.get('code')?.hasError('required') && form.get('code')?.touched">
+              {{ 'code_info' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="small" appearance="outline">
+            <mat-label>{{ 'name' | translate }}</mat-label>
+            <input matInput formControlName="name" required />
+            <mat-error *ngIf="form.get('name')?.hasError('required') && form.get('name')?.touched">
+              {{ 'name_info' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width small" appearance="outline">
+            <mat-label>{{ 'description' | translate }}</mat-label>
+            <textarea matInput formControlName="description" required></textarea>
+            <mat-error *ngIf="form.get('description')?.hasError('required') && form.get('description')?.touched">
+              {{ 'description_info' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </mat-expansion-panel>
+      </form>
+      <hr class="divider" />
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title class="panel-title">{{ 'pdf_page_settings' | translate }}</mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-checkbox color="primary" [(ngModel)]="showHeader" (change)="changeHeaderDisplay($event.checked)"></mat-checkbox>
+        <mat-form-field class="small input-with-checkbox" appearance="outline">
+          <mat-label>{{ 'header_height' | translate }}</mat-label>
+          <input [disabled]="!showHeader" matInput type="number" value="25" min="0" max="10000" [(ngModel)]="headerHeightInput" #headerHeightModel="ngModel" />
+          <mat-error *ngIf="headerHeightModel.errors?.['min']">
+            {{ 'number_error_min' | translate: { minValue: 0 } }}
+          </mat-error>
+          <mat-error *ngIf="headerHeightModel.errors?.['max']">
+            {{ 'number_error_max' | translate: { maxValue: 10000 } }}
+          </mat-error>
+        </mat-form-field>
+        <br/>
+        <mat-checkbox color="primary" [(ngModel)]="showFooter" (change)="changeFooterDisplay($event.checked)"></mat-checkbox>
+        <mat-form-field class="small input-with-checkbox" appearance="outline">
+          <mat-label>{{ 'footer_height' | translate }}</mat-label>
+          <input [disabled]="!showFooter" matInput type="number" value="25" min="0" max="10000"  [(ngModel)]="footerHeightInput" #footerHeightModel="ngModel" form="novalidatedform" />
+          <mat-error *ngIf="footerHeightModel.errors?.['min']">
+            {{ 'number_error_min' | translate: { minValue: 0 } }}
+          </mat-error>
+          <mat-error *ngIf="footerHeightModel.errors?.['max']">
+            {{ 'number_error_max' | translate: { maxValue: 10000 } }}
+          </mat-error>
+        </mat-form-field>
+
+        <p>
+          <mat-slide-toggle color="primary" [(ngModel)]="showSpecialPageSizeField" (change)="changeSpecialPageSizeSelection($event)">
+            {{ 'custom_page_size' | translate }}
+          </mat-slide-toggle>
+        </p>
+
+        <mat-form-field *ngIf="!showSpecialPageSizeField" class="small" appearance="outline">
+          <mat-label>{{ 'page_size' | translate }}</mat-label>
+          <mat-select (selectionChange)="onPageSizeChange($event)" [(value)]="selectedPageSize">
+            @for (pageSize of pageSizeList; track pageSize) {
+              <mat-option [value]="pageSize.value">{{ pageSize.viewValue }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="showSpecialPageSizeField" class="small" appearance="outline">
+          <mat-label>{{ 'page_width' | translate }}</mat-label>
+          <input matInput type="number" min="0" max="3000" [(ngModel)]="specialPageWidth" #pageWidthModel="ngModel" form="novalidatedform" />
+          <mat-error *ngIf="pageWidthModel.errors?.['min']">
+            {{ 'number_error_min' | translate: { minValue: 0 } }}
+          </mat-error>
+          <mat-error *ngIf="pageWidthModel.errors?.['max']">
+            {{ 'number_error_max' | translate: { maxValue: 3000 } }}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field *ngIf="showSpecialPageSizeField" class="small" appearance="outline">
+          <mat-label>{{ 'page_height' | translate }}</mat-label>
+          <input matInput type="number" min="0" max="3000" [(ngModel)]="specialPageHeight" #pageHeightModel="ngModel" form="novalidatedform" />
+          <mat-error *ngIf="pageHeightModel.errors?.['min']">
+            {{ 'number_error_min' | translate: { minValue: 0 } }}
+          </mat-error>
+          <mat-error *ngIf="pageHeightModel.errors?.['max']">
+            {{ 'number_error_max' | translate: { maxValue: 3000 } }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="small" appearance="outline">
+          <mat-label>{{ 'top_margin' | translate }}</mat-label>
+          <input matInput type="number" min="0" max="100" [(ngModel)]="headerTopMarginInput" #topMarginModel="ngModel" form="novalidatedform" />
+          <mat-error *ngIf="topMarginModel.errors?.['min']">
+            {{ 'number_error_min' | translate: { minValue: 0 } }}
+          </mat-error>
+          <mat-error *ngIf="topMarginModel.errors?.['max']">
+            {{ 'number_error_max' | translate: { maxValue: 100 } }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="small" appearance="outline">
+          <mat-label>{{ 'bottom_margin' | translate }}</mat-label>
+          <input matInput type="number" min="0" max="100" [(ngModel)]="footerBottomMarginInput" #bottomMarginModel="ngModel" form="novalidatedform" />
+          <mat-error *ngIf="bottomMarginModel.errors?.['min']">
+            {{ 'number_error_min' | translate: { minValue: 0 } }}
+          </mat-error>
+          <mat-error *ngIf="bottomMarginModel.errors?.['max']">
+            {{ 'number_error_max' | translate: { maxValue: 100 } }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="small" appearance="outline">
+          <mat-label>{{ 'left_margin' | translate }}</mat-label>
+          <input matInput type="number" min="0" max="3000" [(ngModel)]="leftMarginInput" #leftMarginModel="ngModel" form="novalidatedform" />
+          <mat-error *ngIf="leftMarginModel.errors?.['min']">
+            {{ 'number_error_min' | translate: { minValue: 0 } }}
+          </mat-error>
+          <mat-error *ngIf="leftMarginModel.errors?.['max']">
+            {{ 'number_error_max' | translate: { maxValue: 3000 } }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="small" appearance="outline">
+          <mat-label>{{ 'right_margin' | translate }}</mat-label>
+          <input matInput type="number" min="0" max="3000" [(ngModel)]="rightMarginInput" #rightMarginModel="ngModel" form="novalidatedform" />
+          <mat-error *ngIf="rightMarginModel.errors?.['min']">
+            {{ 'number_error_min' | translate: { minValue: 0 } }}
+          </mat-error>
+          <mat-error *ngIf="rightMarginModel.errors?.['max']">
+            {{ 'number_error_max' | translate: { maxValue: 3000 } }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="small" appearance="outline" >
+          <mat-label>{{ 'number_of_copies' | translate }}</mat-label>
+          <input matInput type="number" min="1" max="1000" [(ngModel)]="numberOfCopies" #numberOfCopiesModel="ngModel" form="novalidatedform"/>
+          <mat-error *ngIf="numberOfCopiesModel.errors?.['min']">
+            {{ 'number_error_min' | translate: { minValue: 1 } }}
+          </mat-error>
+          <mat-error *ngIf="numberOfCopiesModel.errors?.['max']">
+            {{ 'number_error_max' | translate: { maxValue: 1000 } }}
+          </mat-error>
+        </mat-form-field>
+      </mat-expansion-panel>
+
+      <form id="novalidatedform" novalidate></form>
+      <hr class="divider" />
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title class="panel-title">{{ 'parameters' | translate }}</mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <parameter-tree [editorInstance]="editorInstance"></parameter-tree>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <div class="main-container">
+    <div class="editor-container editor-container_document-editor">
+      <div class="editor-container__editor-wrapper">
+        <div class="editor-container__editor">
+          <div #toolbar id="toolbar"></div>
+          <div #header id="header" [lang]="this.translate.currentLang"></div>
+          <div #content id="content"></div>
+          <div #footer id="footer" [lang]="this.translate.currentLang"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<router-outlet />
